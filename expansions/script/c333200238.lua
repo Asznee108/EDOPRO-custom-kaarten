@@ -1,0 +1,85 @@
+--Stand User - Josuke Higashikata, Soft & Wet (8)
+local s,id=GetID()
+function s.initial_effect(c)
+    --link summon
+	Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0xfac),2)
+	c:EnableReviveLimit()
+    --battle indestructable
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e0:SetValue(aux.NOT(aux.TargetBoolFunction(Card.IsSetCard,0xfac)))
+	c:RegisterEffect(e0)
+    --add counter
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
+	e1:SetCategory(CATEGORY_COUNTER)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetCountLimit(1)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTarget(s.target)
+	e1:SetOperation(s.operation)
+	c:RegisterEffect(e1)
+    --indes
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetCondition(s.incon)
+	e2:SetValue(1)
+	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e3:SetValue(s.inval)
+	c:RegisterEffect(e3)
+end
+s.counter_place_list={0x1024}
+s.listed_series={0xfac}
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsCanAddCounter(0x1024,1) end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,nil,0x1024,1) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,Card.IsCanAddCounter,tp,0,LOCATION_MZONE,1,1,nil,0x1024,1)
+end
+function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+    local atk=tc:GetBaseAttack()
+    local def=tc:GetBaseDefense()
+	if tc:IsRelateToEffect(e) and tc:AddCounter(0x1024,1) then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+        local e2=Effect.CreateEffect(e:GetHandler())
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e2)
+        local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_SET_ATTACK_FINAL)
+		e3:SetValue(atk/2)
+		e3:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e3)
+        local e4=Effect.CreateEffect(e:GetHandler())
+		e4:SetType(EFFECT_TYPE_SINGLE)
+		e4:SetCode(EFFECT_SET_DEFENSE_FINAL)
+		e4:SetValue(def/2)
+		e4:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e4)
+        local e5=Effect.CreateEffect(e:GetHandler())
+		e5:SetType(EFFECT_TYPE_SINGLE)
+		e5:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
+		e5:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e5)
+	end
+end
+function s.incon(e)
+	return #(e:GetHandler():GetLinkedGroup():Filter(Card.IsType,nil,TYPE_MONSTER))>0
+end
+function s.inval(e,re,tp)
+	return tp~=e:GetHandlerPlayer()
+end
