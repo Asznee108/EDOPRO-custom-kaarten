@@ -81,11 +81,11 @@ function s.operation(montype,chkfun,fun)
 		local syng=Duel.GetMatchingGroup(s.filter(montype,chkfun),tp,LOCATION_EXTRA,0,nil,g,tp,true)
 		if #syng>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local c=syng:Select(tp,1,1,nil):GetFirst()
-			if Duel.SynchroSummon(tp,c,g)>0 then
-                local atk=c:GetAttack()
-                local lvl=c:GetLevel()
-		        if Duel.Destroy(c,REASON_EFFECT)~=0 then
+			local tc=syng:Select(tp,1,1,nil):GetFirst()
+			if Duel.SynchroSummon(tp,tc,g)>0 then
+                local atk=tc:GetAttack()
+                local lvl=tc:GetLevel()
+		        if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 			        local g=Duel.GetMatchingGroup(s.desfilter,tp,0,LOCATION_MZONE,nil,atk,lvl)
 			        Duel.Destroy(g,REASON_EFFECT)
 		        end
@@ -123,7 +123,7 @@ function s.spfilter(c,e,tp)
 	return c:IsType(TYPE_TUNER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
     Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA+LOCATION_GRAVE)
 end
