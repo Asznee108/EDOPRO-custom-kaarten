@@ -39,32 +39,35 @@ function s.initial_effect(c)
 end
 s.listed_series={0xf0}
 --Special Summon 
-function s.spcostfilter(c,tp)
+function s.spcostfilter(c,e,tp)
 	return c:IsSetCard(0xf0) and c:IsMonster()
-        and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c:GetCode()) and not c:IsPublic()
+        and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetCode()) and not c:IsPublic()
 end
 function s.spfilter(c,e,tp,code)
-	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.spcostfilter,tp,LOCATION_HAND,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.spcostfilter,tp,LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local g=Duel.SelectMatchingCard(tp,s.spcostfilter,tp,LOCATION_HAND,0,1,1,nil,tp)
+	local g=Duel.SelectMatchingCard(tp,s.spcostfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.ShuffleHand(tp)
     e:SetLabel(g:GetFirst():GetCode())
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	local code=e:GetLabel()
+	Duel.SetTargetParam(code)
+	e:SetLabel(0)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local code=e:GetLabel()
+	local code=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.spfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp,code)
 	local tc=g:GetFirst()
-	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
