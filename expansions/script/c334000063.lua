@@ -87,7 +87,7 @@ function s.cfilter(c)
 	return c:IsSummonType(SUMMON_TYPE_SPECIAL)
 end
 function s.spcon2(e,tp,eg,ep,ev,re,r,rp)
-	Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil)
+	return Duel.IsExistingMatchingCard(s.cfilter,tp,0,LOCATION_MZONE,1,nil)
 end
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(0xf0) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(id)
