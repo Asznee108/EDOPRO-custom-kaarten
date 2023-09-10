@@ -24,7 +24,7 @@ function s.initial_effect(c)
 end
 s.listed_series={0xf0}
 --act from hand
-function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+function s.handconcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_EMZONE,0)==0
 end
 --effect
