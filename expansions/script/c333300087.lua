@@ -103,6 +103,18 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) and #g>0 then
 		Duel.Destroy(g,REASON_EFFECT)
 	end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_ATTACK)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(s.ftarget)
+	e1:SetLabel(c:GetFieldID())
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	aux.RegisterClientHint(c,nil,tp,1,0,aux.Stringid(id,2),nil)
+end
+function s.ftarget(e,c)
+	return e:GetLabel()~=c:GetFieldID()
 end
 --Special Summon synchro monster
 function s.sumcon(e,tp,eg,ep,ev,re,r,rp)
