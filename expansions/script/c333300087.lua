@@ -59,8 +59,7 @@ s.listed_names={id,CARD_RED_DRAGON_ARCHFIEND}
 s.synchro_nt_required=1
 --materials
 function s.matfilter(c,val,scard,sumtype,tp)
-	return c:IsRace(RACE_DRAGON,scard,sumtype,tp) and c:IsAttribute(ATTRIBUTE_DARK,scard,sumtype,tp) 
-        and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp) and c:IsLevelAbove(8,scard,sumtype,tp)
+	return c:IsSetCard(0x1045,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp)
 end
 --multi attack
 function s.mfilter(c)
@@ -99,6 +98,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
     local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) and #g>0 then
 		Duel.Destroy(g,REASON_EFFECT)
