@@ -101,7 +101,17 @@ function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
     local g=Duel.GetFieldGroup(tp,0,LOCATION_ONFIELD)
 	if Duel.NegateActivation(ev) and re:GetHandler():IsRelateToEffect(re) and #g>0 then
-		Duel.Destroy(g,REASON_EFFECT)
+		local ct=Duel.Destroy(g,REASON_EFFECT)
+		if ct>0 then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+			e1:SetRange(LOCATION_MZONE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(ct*500)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
+			e:GetHandler():RegisterEffect(e1)
+		end
 	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
