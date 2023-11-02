@@ -92,10 +92,12 @@ function s.chlimit(e,ep,tp)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
     local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local ft2=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local g=e:GetLabel()
 	local dg=Duel.GetTargetCards(e)
 	if #dg==0 then return end
 	if ft>0 then ft=g end
+	if ft>ft2 then ft=ft2 end
     if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	local c=e:GetHandler()
 	for tc in dg:Iter() do
