@@ -12,12 +12,13 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_ONFIELD,0)
-	e2:SetTarget(s.target)
-	e2:SetValue(1)
+	e2:SetTarget(aux.TargetBoolFunction(Card.ListsCode,555550000))
+	e2:SetValue(aux.indoval)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e3:SetValue(aux.tgoval)
 	c:RegisterEffect(e3)
     --recover and search
 	local e4=Effect.CreateEffect(c)
@@ -32,10 +33,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 s.listed_names={id,555550000}
---immunity
-function s.target(e,c)
-	return c:ListsCode(555550000)
-end
 --recover and search
 function s.filter(c,tp)
 	return c:IsFaceup() and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetAttack())
