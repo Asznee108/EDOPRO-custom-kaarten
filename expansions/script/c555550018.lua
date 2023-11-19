@@ -61,7 +61,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 --add to hand
 function s.vfilter(c,tp)
-	return c:IsPreviousPosition(POS_FACEUP) and c:IsPreviousCode(555550000) and c:IsPreviousControler(tp)
+	return c:IsPreviousPosition(POS_FACEUP) and c:IsCode(555550000) and c:IsPreviousControler(tp)
 		and c:GetReasonPlayer()==1-tp
 end
 function s.rthcond(e,tp,eg,ep,ev,re,r,rp)

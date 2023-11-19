@@ -75,7 +75,7 @@ function s.desfilter2(c,g)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc:IsRelateToEffect(e) then
 		Duel.BreakEffect()
 		if Duel.SelectOption(tp,aux.Stringid(id,2),aux.Stringid(id,3))==0 then
 			local seq=tc:GetSequence()
