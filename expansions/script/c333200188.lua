@@ -101,7 +101,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.setfilter(c)
-	return (c:IsRed() or c:IsKing() or aux.HasListedSetCode(c,0x57) or aux.HasListedSetCode(c,0x543)) and c:IsType(TYPE_TRAP) and c:IsSSetable()
+	return (c:IsRed() or c:IsKing() or c:ListsArchetype(c,0x57) or c:ListsArchetype(c,0x543)) and c:IsType(TYPE_TRAP) and c:IsSSetable()
 end
 function s.addfilter(c)
     return (c:IsRed() or c:IsKing() or c:IsSetCard(0x57)) and c:IsMonster() and c:IsAbleToHand()
