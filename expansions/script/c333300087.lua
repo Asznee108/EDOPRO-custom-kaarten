@@ -1,4 +1,4 @@
---Hot Red Dragon Archfiend King Calamity
+--Absolute Ruler Red Dragon Archfiend
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
