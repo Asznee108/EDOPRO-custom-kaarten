@@ -15,11 +15,11 @@ function s.initial_effect(c)
 end
 s.listed_names={id,555550000}
 function s.spcheck(sg,tp,exg,e)
-	return Duel.IsExistingMatchingCard(s.exfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,sg:GetSum(Card.GetLevel),sg)
+	return Duel.IsExistingMatchingCard(s.exfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,sg)
 end
 function s.exfilter(c,e,tp,sg)
 	return c:ListsCode(555550000) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and c:IsLevel(sg:GetSum(Card.GetLevel)) 
+		and c:IsLevel(sg:GetSum(Card.GetLevel)) and Duel.GetLocationCountFromEx(tp,tp,sg,c)>0
 end
 function s.cgfilter(c)
 	return c:IsMonster() and c:ListsCode(555550000)
@@ -41,7 +41,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,nil,tp,LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.sefilter(c,e,tp,lv)
-	return c:ListsCode(555550000) and c:IsLevel(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsType(TYPE_FUSION)
+	return c:ListsCode(555550000) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local lv=e:GetLabel()
