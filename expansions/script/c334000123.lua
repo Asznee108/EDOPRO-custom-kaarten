@@ -12,6 +12,8 @@ function s.op(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetOperation(s.operation)
 	Duel.RegisterEffect(e1,0)
+	local e2=e1:Clone()
+	Duel.RegisterEffect(e2,1)
 end
 
 --place on deck
