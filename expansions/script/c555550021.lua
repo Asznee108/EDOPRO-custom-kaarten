@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 s.listed_names={id,555550000}
-function s.rmfilter(e,c,p)
+function s.rmlimit(e,c,p)
     return c:ListsCode(555550000) and (c:IsLocation(LOCATION_GRAVE) or c:IsLocation(LOCATION_MZONE))
 end
 function s.dfilter(c,tp)
