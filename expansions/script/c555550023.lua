@@ -14,7 +14,7 @@ function s.initial_effect(c)
 	e1:SetOperation(s.atkop)
 	c:RegisterEffect(e1)
 end
-s.listed_names={555550000}
+s.listed_names={555550000,id}
 function s.atkfilter(c)
 	return c:IsCode(555550000) and c:IsFaceup()
 end
