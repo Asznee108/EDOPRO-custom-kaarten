@@ -2,9 +2,9 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
-	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_SYNCHRO),1,1,Synchro.NonTunerEx(Card.IsType,TYPE_SYNCHRO),1,99)
+	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_SYNCHRO),1,1,Synchro.NonTunerEx(Card.IsSetCard,0x123),1,99,s.matfilter,nil,nil,s.matfilter2)
 	c:EnableReviveLimit()
-    --Attribute
+    --Race
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -52,6 +52,16 @@ end
 s.synchro_tuner_required=1
 s.synchro_nt_required=1
 s.listed_series={0x123}
+--mat filter
+function s.matfilter(c,scard,sumtype,tp)
+	return c:IsSetCard(0x123,scard,sumtype,tp)
+end
+function s.cfilter(c,sc,tp)
+	return c:IsType(TYPE_SYNCHRO)
+end
+function s.matfilter2(g,sc,tp)
+	return g:IsExists(s.cfilter,1,nil,sc,tp)
+end
 function s.cfilter(c)
 	return (c:IsRace(RACE_PLANT) or c:IsRace(RACE_DRAGON)) and c:IsAbleToDeckOrExtraAsCost()
 end

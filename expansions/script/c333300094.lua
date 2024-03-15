@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetRange(LOCATION_MZONE|LOCATION_GRAVE)
 	e1:SetValue(CARD_RED_DRAGON_ARCHFIEND)
 	c:RegisterEffect(e1)
-    --Can attack all face-up LIGHT monsters your opponent controls
+    --Can attack all defense monsters your opponent controls
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_ATTACK_ALL)
@@ -29,18 +29,30 @@ function s.initial_effect(c)
 	e3:SetTarget(s.destg)
 	e3:SetOperation(s.desop)
 	c:RegisterEffect(e3)
-    --Special Summon
+	--pos
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,1))
-	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e4:SetCode(EVENT_DESTROYED)
-	e4:SetCountLimit(1,id)
-	e4:SetCondition(s.spcon)
-	e4:SetTarget(s.sptg)
-	e4:SetOperation(s.spop)
+	e4:SetDescription(aux.Stringid(id,3))
+	e4:SetCategory(CATEGORY_POSITION)
+	e4:SetType(EFFECT_TYPE_QUICK_O)
+	e4:SetCode(EVENT_FREE_CHAIN)
+	e4:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCountLimit(1)
+	e4:SetTarget(s.postg)
+	e4:SetOperation(s.posop)
 	c:RegisterEffect(e4)
+    --Special Summon tuner
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,1))
+	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e5:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e5:SetCode(EVENT_DESTROYED)
+	e5:SetCountLimit(1,id)
+	e5:SetCondition(s.spcon)
+	e5:SetTarget(s.sptg)
+	e5:SetOperation(s.spop)
+	c:RegisterEffect(e5)
 end
 s.listed_series={0x543}
 s.listed_names={id,CARD_RED_DRAGON_ARCHFIEND}
@@ -61,6 +73,22 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		if d:IsRelateToBattle() and d:IsDefensePos() then
 			Duel.Destroy(d,REASON_EFFECT)
 		end
+	end
+end
+function s.filter(c)
+	return c:IsFaceup() and c:IsCanChangePosition()
+end
+function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,nil,1,0,0)
+end
+function s.posop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
+	if #g>0 then
+		Duel.HintSelection(g)
+		Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
 	end
 end
 --Special Summon Fiend Tuner 
