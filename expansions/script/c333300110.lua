@@ -4,13 +4,12 @@ function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Synchro Summon Procedure
 	Synchro.AddProcedure(c,nil,3,99,Synchro.NonTunerEx(s.matfilter),1,1)
-	--Must first be synchro summoned
+	--Must first be Synchro Summoned with the above materials
 	local e0=Effect.CreateEffect(c)
-	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SINGLE_RANGE)
 	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetRange(LOCATION_EXTRA)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e0:SetValue(aux.synlimit)
+	e0:SetValue(s.splimit)
 	c:RegisterEffect(e0)
 	--Gains 500 ATK per Tuner monster
 	local e1=Effect.CreateEffect(c)
@@ -65,6 +64,9 @@ s.listed_names={CARD_RED_DRAGON_ARCHFIEND,CARD_CRIMSON_DRAGON}
 --material check
 function s.matfilter(c,val,scard,sumtype,tp)
 	return c:IsRace(RACE_DRAGON,scard,sumtype,tp) and c:IsAttribute(ATTRIBUTE_DARK,scard,sumtype,tp) and c:IsType(TYPE_SYNCHRO,scard,sumtype,tp)
+end
+function s.splimit(e,se,sp,st)
+	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or ((st&SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO and not se)
 end
 --Gain ATK 
 function s.atkval(e,c)

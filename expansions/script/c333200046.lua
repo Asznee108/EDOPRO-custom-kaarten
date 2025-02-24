@@ -1,9 +1,9 @@
 --Chaos Malicious Dragon
 local s,id=GetID()
 function s.initial_effect(c)
-	--synchro summon
-	Synchro.AddProcedure(c,nil,1,99,Synchro.NonTuner(nil),1,99)
 	c:EnableReviveLimit()
+	--Synchro Summon procedure
+	Synchro.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsAttribute,ATTRIBUTE_LIGHT|ATTRIBUTE_DARK),1,99,Synchro.NonTunerEx(Card.IsAttribute,ATTRIBUTE_LIGHT|ATTRIBUTE_DARK),1,99)
     --ATK up
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -39,7 +39,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--banish s/t
 	local e4=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,5))
+	e3:SetDescription(aux.Stringid(id,3))
 	e4:SetCategory(CATEGORY_REMOVE)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
@@ -50,7 +50,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
     --special summon
 	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(id,3))
+	e5:SetDescription(aux.Stringid(id,4))
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_GRAVE)
@@ -160,7 +160,7 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetLabel(e:GetHandler():GetFieldID())
 	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
-	aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,4),nil)
+	aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,5),nil)
 end
 function s.ftarget(e,c)
 	return e:GetLabel()~=c:GetFieldID()
